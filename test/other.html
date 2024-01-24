@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <button id="debounce">debounce</button>
+  <body>
+    <script>
+      const debounceBtn = document.getElementById("debounce");
+      function debounce(fn, delay) {
+        let timer;
+        return function (...rest) {
+          clearTimeout(timer);
+          timer = setTimeout(() => {
+            fn.apply(this, rest);
+          }, delay);
+        };
+      }
+      function fn(name, age) {
+        console.log("防抖执行了", this);
+        console.log(`我是${name}， 今年${age}岁了`);
+      }
+      const obj = {
+        fn,
+        fuc() {
+          console.log('fuc', this);
+        }
+      }
+      obj.fn('李四', 19)
+      obj.fuc()
+      const fnc = debounce(obj.fn, 1000);
+      debounceBtn.addEventListener("click", () => {
+        fnc.call(obj,"张三", 20);
+      });
+      function throttle(fn, delay) {
+        let timer;
+        return function (...rest) {
+          if (timer) {
+            return
+          }
+          timer = setTimeout(() => {
+            fn.apply(this, rest)
+            timer = null;
+          }, delay);
+        }
+      }
+    </script>
+  </body>
+</html>
