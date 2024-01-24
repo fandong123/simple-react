@@ -41,11 +41,11 @@ class Updater {
       },
       ClassComponentInstance.state
     );
-    ClassComponentInstance.state = nextState
-    this.pendingStates.length = 0;
     if (ClassComponentInstance.shouldComponentUpdate && !ClassComponentInstance.shouldComponentUpdate(nextProps, nextState)) {
       isShouldUpdate = false;
     }
+    ClassComponentInstance.state = nextState
+    this.pendingStates.length = 0;
     if (nextProps) {
       ClassComponentInstance.props = nextProps; 
     }
