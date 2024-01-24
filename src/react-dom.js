@@ -74,7 +74,11 @@ function getDOMByClassComponent(VNode) {
   if (!renderVNode) {
     return null;
   }
-  return createDOM(renderVNode);
+  const dom = createDOM(renderVNode);
+  if (instance.componentDidMount) {
+    instance.componentDidMount.call(instance);
+  }
+  return dom;
 }
 
 function getDOMByForwordRef(VNode) {
@@ -169,8 +173,14 @@ export function updateDOMTree(oldVNode, newVNode, oldDOM) {
   }
 }
 
-function removeNode() {
-  
+function removeNode(vNode) {
+  const currentDOM = findDOMByVNode(vNode);
+  if(currentDOM) {
+    currentDOM.remove();
+  }
+  if (vNode.classInstance && vNode.classInstance.componentWillUnmount) {
+    vNode.classInstance.componentWillUnmount();
+  }
 }
 
 function deepDOMDiff(oldVNode, newVNode) {
@@ -205,7 +215,7 @@ function deepDOMDiff(oldVNode, newVNode) {
 
 function updateClassComponent(oldVNode, newVNode) {
   const classInstance = newVNode.classInstance = oldVNode.classInstance;
-  classInstance.updater.launchUpdate()
+  classInstance.updater.launchUpdate(newVNode.props);
 }
 
 function updateFunctionComponent(oldVNode, newVNode) {
