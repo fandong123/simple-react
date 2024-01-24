@@ -1,4 +1,4 @@
-import { REACT_ELEMENT, REACT_FORWORD_REF, toVNode, shallowCompare } from "./utils";
+import { REACT_ELEMENT, REACT_FORWORD_REF, REACT_MEMO, toVNode, shallowCompare } from "./utils";
 import { Component } from "./Component";
 function createElement(type, properties, children) {
   let ref;
@@ -40,6 +40,15 @@ function forwardRef(render) {
   }
 }
 
+function memo(type, compare = null) {
+  return {
+    $$typeof: REACT_MEMO,
+    type,
+    compare
+  }
+}
+
+
 class PureComponent extends Component {
   shouldComponentUpdate(nextProps, nextState) {
     return !shallowCompare(this.props, nextProps) || !shallowCompare(this.state, nextState)
@@ -49,6 +58,7 @@ const React = {
   createElement,
   Component,
   PureComponent,
+  memo,
   createRef,
   forwardRef
 };
