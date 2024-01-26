@@ -1,17 +1,22 @@
 import ReactDOM from "./react-dom";
 import React from "./react";
 
-function App() {
-  const [count, setCount] = React.useState(0);
-  const [count1, setCount1] = React.useState(1);
-  function handleCount() {
-    setCount(count + 1);
+function reducer(state, action) {
+  if (action.type === "increment") {
+    return {
+      ...state,
+      age: state.age + 1,
+    };
   }
+  throw new Error("unknown action .");
+}
+
+function App() {
+  const [state, dispatch] = React.useReducer(reducer, { age: 20 }); 
   return (
     <div>
-      <button onClick={handleCount}>click me</button>
-      <p>Hello, {count}</p>
-      <p>World, {count1}</p>
+      <button onClick={() => dispatch({ type: "increment" })}>click me</button>
+      <p>Hello, You are {state.age}!</p>
     </div>
   );
 }
