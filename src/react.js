@@ -1,5 +1,6 @@
 import { REACT_ELEMENT, REACT_FORWORD_REF, REACT_MEMO, toVNode, shallowCompare } from "./utils";
 import { Component } from "./Component";
+import { useState } from "./hooks";
 function createElement(type, properties, children) {
   let ref;
   let key;
@@ -60,7 +61,8 @@ const React = {
   PureComponent,
   memo,
   createRef,
-  forwardRef
+  forwardRef,
+  useState
 };
 
 export default React;

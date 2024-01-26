@@ -1,8 +1,15 @@
 import { REACT_ELEMENT, REACT_FORWORD_REF, REACT_MEMO, REACT_TEXT, MOVE, CREATE, shallowCompare } from "./utils";
 import { addEvent } from "./event";
+import { restHookIndex } from './hooks';
+export let emitUpdateForHooks;
 function render(VNode, container) {
-  // 挂载节点
+  // 将虚拟DOM转化成真实DOM
+  // 将得到的真实DOM挂载到containerDOM中
   mount(VNode, container);
+  emitUpdateForHooks = () => {
+    restHookIndex();
+    updateDOMTree(VNode, VNode, findDOMByVNode(VNode));
+  }
 }
 function mount(VNode, container) {
   const newDOM = createDOM(VNode);
