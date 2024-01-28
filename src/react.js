@@ -1,6 +1,6 @@
 import { REACT_ELEMENT, REACT_FORWORD_REF, REACT_MEMO, toVNode, shallowCompare } from "./utils";
 import { Component } from "./Component";
-import { useState, useReducer } from "./hooks";
+import { useState, useReducer, useEffect, useLayoutEffect } from "./hooks";
 function createElement(type, properties, children) {
   let ref;
   let key;
@@ -63,7 +63,9 @@ const React = {
   createRef,
   forwardRef,
   useState,
-  useReducer
+  useReducer,
+  useEffect,
+  useLayoutEffect
 };
 
 export default React;

@@ -142,8 +142,12 @@ function mountArray(children, parentDom) {
     // if (typeof ele === "string" || typeof children === "number") {
     //   parentDom.appendChild(document.createTextNode(e le));
     // } else {
-    children[idx].index = idx;
-    mount(children[idx], parentDom);
+    if (ele === false) {
+      children.splice(idx, 1);
+    } else {
+      children[idx].index = idx;
+      mount(children[idx], parentDom);
+    }
     // }
   });
 }

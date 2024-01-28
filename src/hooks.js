@@ -1,4 +1,4 @@
-import {  emitUpdateForHooks } from './react-dom';
+import { emitUpdateForHooks } from "./react-dom";
 
 const states = [];
 let hookIndex = 0;
@@ -23,4 +23,28 @@ export function useReducer(reducer, initialState) {
     emitUpdateForHooks();
   }
   return [states[hookIndex++], dispatch];
+}
+
+export function useEffect(effectFunction, deps = []) {
+  const currentIndex = hookIndex;
+  const [destroyFunction, prDeps] = states[hookIndex] || [null, null];
+  if (!states[hookIndex] || deps.some((item, index) => item !== prDeps[index])) {
+    setTimeout(() => {
+      destroyFunction && destroyFunction();
+      states[currentIndex] = [effectFunction(), deps];
+    });
+  }
+  hookIndex++;
+}
+
+export function useLayoutEffect(effectFunction, deps = []) {
+  const currentIndex = hookIndex;
+  const [destroyFunction, prDeps] = states[hookIndex] || [null, null];
+  if (!states[hookIndex] || deps.some((item, index) => item !== prDeps[index])) {
+    queueMicrotask(() => {
+      destroyFunction && destroyFunction();
+      states[currentIndex] = [effectFunction(), deps];
+    });
+  }
+  hookIndex++;
 }

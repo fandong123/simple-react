@@ -1,68 +1,67 @@
 import ReactDOM from "./react-dom";
 import React from "./react";
-
-function reducer(state, action) {
-  if (action.type === "increment") {
-    return {
-      ...state,
-      age: state.age + 1,
-    };
-  }
-  throw new Error("unknown action .");
+const useState = React.useState;
+const useEffect = React.useEffect;
+// import { useState, useEffect } from './react';
+function createConnection(serverUrl, roomId) {
+  // A real implementation would actually connect to the server
+  return {
+    connect() {
+      console.log('✅ Connecting to "' + roomId + '" room at ' + serverUrl + '...');
+    },
+    disconnect() {
+      console.log('❌ Disconnected from "' + roomId + '" room at ' + serverUrl);
+    }
+  };
 }
+function ChatRoom({ roomId }) {
+  const [serverUrl, setServerUrl] = useState('https://localhost:1234');
 
-function App() {
-  const [state, dispatch] = React.useReducer(reducer, { age: 20 }); 
+  useEffect(() => {
+    const connection = createConnection(serverUrl, roomId);
+    connection.connect();
+    return () => {
+      connection.disconnect();
+    };
+  }, [roomId, serverUrl]);
+  console.log('ChatRoom   render!!!!!!!!');
   return (
     <div>
-      <button onClick={() => dispatch({ type: "increment" })}>click me</button>
-      <p>Hello, You are {state.age}!</p>
+      <label>
+        Server URL:{' '}
+        <input
+          value={serverUrl}
+          onInput={e => setServerUrl(e.target.value)}
+        />
+      </label>
+      <h1>Welcome to the {roomId} room!</h1>
     </div>
   );
 }
 
-// function Greeting({ name }) {
-//   console.log("Greeting", "render!!!!!", name);
-//   return <div>Hello, {name}</div>;
-// }
-
-// console.log('Greeting function', Greeting, <Greeting />);
-// class App extends React.Component {
-//   constructor(props) {
-//     super(props);
-//     this.state = {
-//       name: "",
-//       adress: "",
-//     };
-//   }
-
-//   setName(val) {
-//     this.setState({
-//       name: val,
-//     });
-//   }
-
-//   setAdress(val) {
-//     this.setState({
-//       adress: val,
-//     });
-//   }
-
-//   render() {
-//     return (
-//       <div>
-//         <label>
-//           Name:
-//           <input onInput={(e) => this.setName(e.target.value)} />
-//         </label>
-//         <label>
-//           Adress:
-//           <input onInput={(e) => this.setAdress(e.target.value)} />
-//         </label>
-//         <Greeting name={this.state.name} />
-//       </div>
-//     );
-//   }
-// }
+function App() {
+  const [roomId, setRoomId] = useState('general');
+  const [show, setShow] = useState(false);
+  return (
+    <div>
+      <label>
+        Choose the chat room:{' '}
+        <select
+          value={roomId}
+          onChange={e => setRoomId(e.target.value)}
+        >
+          <option value="general">general</option>
+          <option value="travel">travel</option>
+          <option value="music">music</option>
+        </select>
+      </label>
+      <button onClick={() => setShow(!show)}>
+        {show ? 'Close chat' : 'Open chat'}
+      </button>
+      {show && <hr />}
+      {show && <ChatRoom roomId={roomId} />}
+    </div>
+  );
+}
 
 ReactDOM.render(<App />, document.getElementById("root"));
