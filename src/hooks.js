@@ -53,3 +53,7 @@ export function useRef(initialState) {
   states[hookIndex] = states[hookIndex] || { current: initialState };
   return states[hookIndex++]
 }
+
+export function useImperativeHandle(ref, callback) {
+  ref.current = callback();
+}
